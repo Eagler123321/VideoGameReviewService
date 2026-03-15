@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="createdGameTag1" author="admin">
+        <createTable tableName="game_tags">
+            <column name="game_id" type="bigint"/>
+            <column name="tag_id" type="bigint"/>
+        </createTable>
+        
+        <addPrimaryKey tableName="game_tags" columnNames="game_id, tag_id"/>
+
+        <addForeignKeyConstraint baseTableName="game_tags"
+                                 baseColumnNames="game_id"
+                                 constraintName="fk_game_tags_game"
+                                 referencedTableName="game"
+                                 referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint baseTableName="game_tags"
+                                 baseColumnNames="tag_id"
+                                 constraintName="fk_game_tags_tag"
+                                 referencedTableName="tag"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+</databaseChangeLog>

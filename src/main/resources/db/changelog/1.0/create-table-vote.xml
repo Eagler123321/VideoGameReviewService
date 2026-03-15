@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="createdVote1" author="admin">
+        <createTable tableName="vote">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="vote_type" type="varchar(10)"/>
+            <column name="created_at" type="timestamp"/>
+            <column name="user_id" type="bigint">
+                <constraints foreignKeyName="fk_vote_users_id" references="users(id)"/>
+            </column>
+            <column name="review_id" type="bigint">
+                <constraints foreignKeyName="fk_vote_review_id" references="review(id)"/>
+            </column>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

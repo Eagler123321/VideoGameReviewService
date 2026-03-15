@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="createdGamePlatform" author="admin">
+        <createTable tableName="game_platforms">
+            <column name="game_id" type="bigint"/>
+            <column name="platform_id" type="bigint"/>
+        </createTable>
+
+        <addPrimaryKey tableName="game_platforms" columnNames="game_id, platform_id"/>
+
+        <addForeignKeyConstraint baseTableName="game_platforms"
+                                 baseColumnNames="game_id"
+                                 constraintName="fk_game_platforms_game"
+                                 referencedTableName="game"
+                                 referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint baseTableName="game_platforms"
+                                 baseColumnNames="platform_id"
+                                 constraintName="fk_game_platforms_platform"
+                                 referencedTableName="platform"
+                                 referencedColumnNames="id"/>
+
+    </changeSet>
+</databaseChangeLog>

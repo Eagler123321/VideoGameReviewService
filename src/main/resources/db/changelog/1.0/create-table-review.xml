@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="createTable1" author="admin">
+        <createTable tableName="review">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="comment" type="varchar(5000)"/>
+            <column name="graphics_rate" type="double"/>
+            <column name="story_rate" type="double"/>
+            <column name="atmosphere_rate" type="double"/>
+            <column name="gameplay_rate" type="double"/>
+            <column name="updated_at" type="timestamp"/>
+            <column name="created_at" type="timestamp"/>
+
+            <column name="game_id" type="bigint">
+                <constraints foreignKeyName="fk_review_game_id" references="game(id)"/>
+            </column>
+            <column name="user_id" type="bigint">
+                <constraints foreignKeyName="fk_review_users_id" references="users(id)"/>
+            </column>
+
+        </createTable>
+    </changeSet>
+</databaseChangeLog>
