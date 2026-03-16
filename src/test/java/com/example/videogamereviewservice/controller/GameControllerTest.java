@@ -51,7 +51,7 @@ public class GameControllerTest {
     private static final String imageUrl = "asjidnaijsd.jpg";
     private static final String developer = "Bandai Namco Entertainment";
     private static final String publisher = "Bandai Namco Entertainment";
-    private static final List<Long> genreIds = List.of(1L, 2L, 3L);
+    private static final List<Long> genreIds = List.of(1L, 2L, 3L, 1L);
     private static final List<Long> platformIds = List.of(2L, 3L);
     private static final List<Long> tagIds = List.of(1L, 3L);
 
@@ -172,7 +172,7 @@ public class GameControllerTest {
                 .andExpect(jsonPath("$.platformIds", hasSize(2)));
     }
 
-    @Test
+    @Test // Проверка исключения и статуса (декоративный)
     public void createGame_whenTagIdDoesNotExist_thenReturnsBadRequest() throws Exception {
         given(gameServiceLocal.createGame(any(GameRequestDto.class)))
                 .willThrow(new InvalidIdException("Tag with id 999 does not exist"));
@@ -210,7 +210,7 @@ public class GameControllerTest {
         assertGameResponse(response);
     }
 
-    @Test // Проверка исключения и статуса
+    @Test // Проверка исключения и статуса (декоративный)
     public void getGameById_whenNotFound_thenReturnsNotFound() throws Exception{
         when(gameServiceLocal.getGameById(gameId))
                 .thenThrow(new NotFoundException("Game not found!"));
@@ -262,7 +262,7 @@ public class GameControllerTest {
         response.andExpect(status().isNoContent());
     }
 
-    @Test // Проверка исключения и статуса
+    @Test // Проверка исключения и статуса (декоративный)
     public void deleteGameById_whenGameNotFound_thenReturnsNotFound() throws Exception {
         doThrow(new NotFoundException("Game not found!"))
                 .when(gameServiceLocal).deleteGameById(999L);
@@ -285,7 +285,7 @@ public class GameControllerTest {
         assertGameResponse(response);
     }
 
-    @Test // Проверка исключения и статуса
+    @Test // Проверка исключения и статуса (декоративный)
     public void updateGameById_whenTagIdDoesNotExist_thenReturnsBadRequest() throws Exception{
         given(gameServiceLocal.updateGameById(any(GameRequestDto.class), eq(gameId)))
                 .willThrow(new InvalidIdException("Tag with id 999 does not exist"));
@@ -311,7 +311,7 @@ public class GameControllerTest {
         response.andExpect(status().isBadRequest());
     }
 
-    @Test // Проверка исключения и статуса
+    @Test // Проверка исключения и статуса (декоративный)
     public void updateGameById_whenGameIdIsNotFound_thenReturnsNotFound() throws Exception{
         given(gameServiceLocal.updateGameById(any(GameRequestDto.class), eq(gameId)))
                 .willThrow(new NotFoundException("Game not found!"));

@@ -121,10 +121,10 @@ public class ReviewControllerTest {
         response.andExpect(status().isBadRequest());
     }
 
-    @Test
+    @Test // Проверка исключения и статуса (декоративный)
     public void createReview_whenGameIdDoesNotExist_thenReturnsBadRequest() throws Exception {
         given(reviewServiceLocal.createReview(any(ReviewRequestDto.class)))
-                .willThrow(new InvalidIdException("Tag with id 999 does not exist"));
+                .willThrow(new InvalidIdException("User with id 999 does not exist"));
         // Json здесь декоративный, тест предназначен для проверки исключения InvalidIdException и статуса Bad Request
         String jsonWithInvalidTag = """
             {
@@ -163,7 +163,7 @@ public class ReviewControllerTest {
                 .andExpect(jsonPath("$.gameId").value(gameId));
     }
 
-    @Test // Проверка исключения и статуса
+    @Test // Проверка исключения и статуса (декоративный)
     public void getReviewById_whenNotFound_thenReturnsNotFound() throws Exception{
         when(reviewServiceLocal.getReviewById(reviewId))
                 .thenThrow(new NotFoundException("Review not found!"));
@@ -213,7 +213,7 @@ public class ReviewControllerTest {
         response.andExpect(status().isNoContent());
     }
 
-    @Test // Проверка исключения и статуса
+    @Test // Проверка исключения и статуса (декоративный)
     public void deleteReviewById_whenReviewNotFound_thenReturnsNotFound() throws Exception {
         doThrow(new NotFoundException("Review not found!"))
                 .when(reviewServiceLocal).deleteReviewById(999L);
@@ -243,7 +243,7 @@ public class ReviewControllerTest {
                 .andExpect(jsonPath("$.gameId").value(gameId));
     }
 
-    @Test // Проверка исключения и статуса
+    @Test // Проверка исключения и статуса (декоративный)
     public void updateReviewById_whenReviewIdIsNotFound_thenReturnsNotFound() throws Exception{
         given(reviewServiceLocal.updateReviewById(any(ReviewRequestDto.class), eq(reviewId)))
                 .willThrow(new NotFoundException("Review not found!"));
@@ -288,7 +288,7 @@ public class ReviewControllerTest {
         response.andExpect(status().isBadRequest());
     }
 
-    @Test // Проверка исключения и статуса
+    @Test // Проверка исключения и статуса (декоративный)
     public void updateReviewById_whenUserIdDoesNotExist_thenReturnsBadRequest() throws Exception{
         given(reviewServiceLocal.updateReviewById(any(ReviewRequestDto.class), eq(reviewId)))
                 .willThrow(new InvalidIdException("User with id 999 does not exist"));

@@ -59,7 +59,7 @@ public class UserServiceLocal implements UserService {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("User not found with id " + id));
 
-        log.debug("User is received with email {}", userRepository.getReferenceById(id).getEmail());
+        log.debug("User is received with email {}", user.getEmail());
 
         return userMapper.toDto(user);
     }

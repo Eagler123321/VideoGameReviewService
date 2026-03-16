@@ -1,11 +1,10 @@
-package com.example.videogamereviewservice.service;
+package com.example.videogamereviewservice.service.local;
 
 import com.example.videogamereviewservice.dto.request.TagRequestDto;
 import com.example.videogamereviewservice.dto.response.TagResponseDto;
 import com.example.videogamereviewservice.entity.Tag;
 import com.example.videogamereviewservice.mapper.TagMapper;
 import com.example.videogamereviewservice.repository.TagRepository;
-import com.example.videogamereviewservice.service.local.TagServiceLocal;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -59,7 +58,7 @@ public class TagServiceTest {
     }
 
     @Test
-    public void CreateTagById_(){
+    public void createTag_whenValidRequest_thenReturnsSavedTag(){
         when(tagMapper.toEntity(tagRequestDto)).thenReturn(tag);
         when(tagRepository.save(any(Tag.class))).thenReturn(tag);
         when(tagMapper.toDto(tag)).thenReturn(tagResponseDto);
@@ -71,7 +70,7 @@ public class TagServiceTest {
     }
 
     @Test
-    public void GetTagById_(){
+    public void getTagById_whenExists_thenReturnsTag(){
         when(tagRepository.findById(tagId)).thenReturn(Optional.of(tag));
         when(tagMapper.toDto(any(Tag.class))).thenReturn(tagResponseDto);
 
@@ -82,7 +81,7 @@ public class TagServiceTest {
     }
 
     @Test
-    public void GetTags_(){
+    public void getTags_whenListNotEmpty_thenReturnsTags(){
         List<Tag> tags = List.of(tag, tag2);
 
         when(tagRepository.findAll()).thenReturn(tags);
@@ -103,7 +102,7 @@ public class TagServiceTest {
     }
 
     @Test
-    public void DeleteTagById_(){
+    public void deleteTagById_whenExists_thenReturnsDoesNotThrow(){
         when(tagRepository.findById(tagId)).thenReturn(Optional.of(tag));
         
         tagServiceLocal.deleteTagById(tagId);
@@ -112,7 +111,7 @@ public class TagServiceTest {
     }
 
     @Test
-    public void UpdateTagById_(){
+    public void updateTagById_whenValidRequest_thenReturnsUpdatedTag(){
         when(tagRepository.findById(tagId)).thenReturn(Optional.of(tag));
 
         Mockito.lenient().doNothing().when(tagMapper).updateTagFromDto(any(TagRequestDto.class), any(Tag.class));

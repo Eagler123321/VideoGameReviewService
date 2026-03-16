@@ -131,7 +131,7 @@ public class UserControllerTest {
         assertUserResponse(response);
     }
 
-    @Test // Проверка исключения и статуса
+    @Test // Проверка исключения и статуса (декоративный)
     public void getUserById_whenNotFound_thenReturnsNotFound() throws Exception{
         when(userServiceLocal.getUserById(userId))
                 .thenThrow(new NotFoundException("User not found!"));
@@ -180,7 +180,7 @@ public class UserControllerTest {
         response.andExpect(status().isNoContent());
     }
 
-    @Test // Проверка исключения и статуса
+    @Test // Проверка исключения и статуса (декоративный)
     public void deleteUserById_whenUserNotFound_thenReturnsNotFound() throws Exception {
         doThrow(new NotFoundException("User not found!"))
                 .when(userServiceLocal).deleteUserById(999L);
@@ -208,7 +208,7 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.avatarUrl").value(avatarUrl));
     }
 
-    @Test // Проверка исключения и статуса
+    @Test // Проверка исключения и статуса (декоративный)
     public void updateUserById_whenUserIdIsNotFound_thenReturnsNotFound() throws Exception{
         given(userServiceLocal.updateUserById(any(UserRequestDto.class), eq(userId)))
                 .willThrow(new NotFoundException("User not found!"));

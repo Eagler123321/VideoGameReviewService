@@ -96,7 +96,7 @@ public class PlatformControllerTest {
 
     }
 
-    @Test // Проверка исключения и статуса
+    @Test // Проверка исключения и статуса (декоративный)
     public void getPlatformById_whenNotFound_thenReturnsNotFound() throws Exception{
         when(platformServiceLocal.getPlatformById(platformId))
                 .thenThrow(new NotFoundException("Platform not found!"));
@@ -141,7 +141,7 @@ public class PlatformControllerTest {
         response.andExpect(status().isNoContent());
     }
 
-    @Test // Проверка исключения и статуса
+    @Test // Проверка исключения и статуса (декоративный)
     public void deletePlatformById_whenPlatformNotFound_thenReturnsNotFound() throws Exception {
         doThrow(new NotFoundException("Platform not found!"))
                 .when(platformServiceLocal).deletePlatformById(999L);
@@ -164,7 +164,7 @@ public class PlatformControllerTest {
                 .andExpect(jsonPath("$.name", CoreMatchers.is(platformRequestDto.getName())));
     }
 
-    @Test // Проверка исключения и статуса
+    @Test // Проверка исключения и статуса (декоративный)
     public void updatePlatformById_whenPlatformIdIsNotFound_thenReturnsNotFound() throws Exception{
         given(platformServiceLocal.updatePlatformById(any(PlatformRequestDto.class), eq(platformId)))
                 .willThrow(new NotFoundException("Platform not found!"));

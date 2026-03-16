@@ -5,6 +5,7 @@ import com.example.videogamereviewservice.dto.response.ReviewResponseDto;
 import com.example.videogamereviewservice.entity.Game;
 import com.example.videogamereviewservice.entity.Review;
 import com.example.videogamereviewservice.entity.User;
+import com.example.videogamereviewservice.error.InvalidIdException;
 import com.example.videogamereviewservice.error.NotFoundException;
 import com.example.videogamereviewservice.mapper.ReviewMapper;
 import com.example.videogamereviewservice.repository.GameRepository;
@@ -14,10 +15,13 @@ import com.example.videogamereviewservice.service.noImp.ReviewService;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+
+import static com.example.videogamereviewservice.service.validation.ValidationChecker.checkInvalidId;
 
 @Service
 @Slf4j
@@ -37,14 +41,18 @@ public class ReviewServiceLocal implements ReviewService {
     @Override
     @Transactional
     public ReviewResponseDto createReview(ReviewRequestDto reviewRequestDto) {
+        checkInvalidId(userRepository, reviewRequestDto.getUserId(), "User");
+        checkInvalidId(gameRepository, reviewRequestDto.getGameId(), "Game");
+
         Review review = reviewRepository.save(reviewMapper.toEntity(reviewRequestDto));
 
         review.setCreatedAt(LocalDateTime.now());
         review.setUpdatedAt(LocalDateTime.now());
 
-        log.info("User with Email {} left a review with title {}",
-                userRepository.getReferenceById(reviewRequestDto.getUserId()).getEmail(),
-                gameRepository.getReferenceById(reviewRequestDto.getGameId()).getTitle());
+        log.info("User with userId {} and gameId {} left a review with reviewId {}",
+                reviewRequestDto.getUserId(),
+                reviewRequestDto.getGameId(),
+                review.getId());
 
         return reviewMapper.toDto(review);
     }
@@ -61,9 +69,9 @@ public class ReviewServiceLocal implements ReviewService {
 
         review.setUpdatedAt(LocalDateTime.now());
 
-        log.info("Review was updated with user email {} and title {} and id {}",
-                userRepository.getReferenceById(reviewRequestDto.getUserId()).getEmail(),
-                gameRepository.getReferenceById(reviewRequestDto.getGameId()).getTitle(),
+        log.info("Review was updated with userId {} and gameId {} and id {}",
+                reviewRequestDto.getUserId(),
+                reviewRequestDto.getGameId(),
                 id);
 
         return reviewMapper.toDto(review);

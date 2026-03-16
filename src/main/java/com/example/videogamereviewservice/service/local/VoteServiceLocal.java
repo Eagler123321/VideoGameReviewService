@@ -5,6 +5,8 @@ import com.example.videogamereviewservice.dto.response.VoteResponseDto;
 import com.example.videogamereviewservice.entity.Vote;
 import com.example.videogamereviewservice.error.NotFoundException;
 import com.example.videogamereviewservice.mapper.VoteMapper;
+import com.example.videogamereviewservice.repository.ReviewRepository;
+import com.example.videogamereviewservice.repository.UserRepository;
 import com.example.videogamereviewservice.repository.VoteRepository;
 import com.example.videogamereviewservice.service.noImp.VoteService;
 import jakarta.transaction.Transactional;
@@ -15,20 +17,29 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static com.example.videogamereviewservice.service.validation.ValidationChecker.checkInvalidId;
+
 @Service
 @Slf4j
 public class VoteServiceLocal implements VoteService {
     private final VoteMapper voteMapper;
     private final VoteRepository voteRepository;
+    private final UserRepository userRepository;
+    private final ReviewRepository reviewRepository;
 
-    public VoteServiceLocal(VoteMapper voteMapper, VoteRepository voteRepository) {
+    public VoteServiceLocal(VoteMapper voteMapper, VoteRepository voteRepository, UserRepository userRepository, ReviewRepository reviewRepository) {
         this.voteMapper = voteMapper;
         this.voteRepository = voteRepository;
+        this.userRepository = userRepository;
+        this.reviewRepository = reviewRepository;
     }
 
     @Override
     @Transactional
     public VoteResponseDto createVote(VoteRequestDto voteRequestDto) {
+        checkInvalidId(userRepository, voteRequestDto.getUserId(), "User");
+        checkInvalidId(reviewRepository, voteRequestDto.getReviewId(), "Review");
+
         Vote vote = voteRepository.save(voteMapper.toEntity(voteRequestDto));
 
         vote.setCreatedAt(LocalDateTime.now());

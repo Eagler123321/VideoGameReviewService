@@ -95,7 +95,7 @@ public class GenreControllerTest {
 
     }
 
-    @Test // Проверка исключения и статуса
+    @Test // Проверка исключения и статуса (декоративный)
     public void getGenreById_whenNotFound_thenReturnsNotFound() throws Exception{
         when(genreServiceLocal.getGenreById(genreId))
                 .thenThrow(new NotFoundException("Genre not found!"));
@@ -140,7 +140,7 @@ public class GenreControllerTest {
         response.andExpect(status().isNoContent());
     }
 
-    @Test // Проверка исключения и статуса
+    @Test // Проверка исключения и статуса (декоративный)
     public void deleteGenreById_whenGenreNotFound_thenReturnsNotFound() throws Exception {
         doThrow(new NotFoundException("Genre not found!"))
                 .when(genreServiceLocal).deleteGenreById(999L);
@@ -163,7 +163,7 @@ public class GenreControllerTest {
                 .andExpect(jsonPath("$.name", CoreMatchers.is(genreRequestDto.getName())));
     }
 
-    @Test // Проверка исключения и статуса
+    @Test // Проверка исключения и статуса (декоративный)
     public void updateGenreById_whenGenreIdIsNotFound_thenReturnsNotFound() throws Exception{
         given(genreServiceLocal.updateGenreById(any(GenreRequestDto.class), eq(genreId)))
                 .willThrow(new NotFoundException("Genre not found!"));

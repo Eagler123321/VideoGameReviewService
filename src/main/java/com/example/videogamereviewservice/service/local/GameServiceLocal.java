@@ -25,6 +25,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
+import static com.example.videogamereviewservice.service.validation.ValidationChecker.checkInvalidIds;
+
 @Service
 @Slf4j
 public class GameServiceLocal implements GameService {
@@ -75,18 +77,6 @@ public class GameServiceLocal implements GameService {
                 .toList();
     }
 
-    private <T> void checkInvalidIds(JpaRepository<T, Long> repository, List<Long> ids, String type) {
-        if (ids == null || ids.isEmpty()) {
-            return;
-        }
-
-        List<T> entities = repository.findAllById(ids);
-
-        if (entities.size() != ids.size()){
-            throw new InvalidIdException("Some %s Ids do not exist".formatted(type));
-        }
-    }
-
     private Game toEntityIds(GameRequestDto gameRequestDto, Game game) {
         if (gameRequestDto.getTagIds() != null && !gameRequestDto.getTagIds().isEmpty()){
             List<Tag> tags = tagRepository.findAllById(gameRequestDto.getTagIds());
@@ -106,9 +96,15 @@ public class GameServiceLocal implements GameService {
     private GameResponseDto toResponseDto(Game game){
         GameResponseDto responseDto = gameMapper.toDto(game);
 
-        responseDto.setTagIds(game.getTags().stream().map(Tag::getId).toList());
-        responseDto.setGenreIds(game.getGenres().stream().map(Genre::getId).toList());
-        responseDto.setPlatformIds(game.getPlatforms().stream().map(Platform::getId).toList());
+        if (game.getTags() != null) {
+            responseDto.setTagIds(game.getTags().stream().map(Tag::getId).toList());
+        }
+        if (game.getGenres() != null) {
+            responseDto.setGenreIds(game.getGenres().stream().map(Genre::getId).toList());
+        }
+        if (game.getPlatforms() != null) {
+            responseDto.setPlatformIds(game.getPlatforms().stream().map(Platform::getId).toList());
+        }
 
         return responseDto;
     }
@@ -136,7 +132,7 @@ public class GameServiceLocal implements GameService {
         Game game = gameRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Game not found with id " + id));
 
-        log.debug("Game is received with id {}", gameRepository.getReferenceById(id).getTitle());
+        log.debug("Game is received with id {} and title {}", game.getId(), game.getTitle());
 
         return toResponseDto(game);
     }

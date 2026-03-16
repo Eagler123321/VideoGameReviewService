@@ -1,6 +1,7 @@
 package com.example.videogamereviewservice.dto.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,6 +14,7 @@ import lombok.NoArgsConstructor;
 @Schema(description = "Create a new vote")
 public class VoteRequestDto {
     @Schema(description = "Type of vote ( Like / Dislike )", example = "Like")
+    @NotBlank(message = "VoteType is required!")
     private String voteType;
     @Schema(description = "User id, FK", example = "1", requiredMode = Schema.RequiredMode.REQUIRED)
     private Long userId;

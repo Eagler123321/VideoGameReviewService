@@ -1,11 +1,10 @@
-package com.example.videogamereviewservice.service;
+package com.example.videogamereviewservice.service.local;
 
 import com.example.videogamereviewservice.dto.request.PlatformRequestDto;
 import com.example.videogamereviewservice.dto.response.PlatformResponseDto;
 import com.example.videogamereviewservice.entity.Platform;
 import com.example.videogamereviewservice.mapper.PlatformMapper;
 import com.example.videogamereviewservice.repository.PlatformRepository;
-import com.example.videogamereviewservice.service.local.PlatformServiceLocal;
 import org.assertj.core.api.AssertionsForInterfaceTypes;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -60,7 +59,7 @@ public class PlatformServiceTest {
     }
 
     @Test
-    public void CreatePlatformById_(){
+    public void createPlatform_whenValidRequest_thenReturnsSavedPlatform(){
         when(platformMapper.toEntity(platformRequestDto)).thenReturn(platform);
         when(platformRepository.save(any(Platform.class))).thenReturn(platform);
         when(platformMapper.toDto(platform)).thenReturn(platformResponseDto);
@@ -72,7 +71,7 @@ public class PlatformServiceTest {
     }
 
     @Test
-    public void GetPlatformById_(){
+    public void getPlatformById_whenExists_thenReturnsPlatform(){
         when(platformRepository.findById(platformId)).thenReturn(Optional.of(platform));
         when(platformMapper.toDto(any(Platform.class))).thenReturn(platformResponseDto);
 
@@ -83,7 +82,7 @@ public class PlatformServiceTest {
     }
 
     @Test
-    public void GetPlatforms_(){
+    public void getPlatforms_whenListNotEmpty_thenReturnsPlatforms(){
         List<Platform> platforms = List.of(platform, platform2);
 
         when(platformRepository.findAll()).thenReturn(platforms);
@@ -104,7 +103,7 @@ public class PlatformServiceTest {
     }
 
     @Test
-    public void DeletePlatformById_(){
+    public void deletePlatformById_whenExists_thenReturnsDoesNotThrow(){
         when(platformRepository.findById(platformId)).thenReturn(Optional.of(platform));
 
         platformServiceLocal.deletePlatformById(platformId);
@@ -113,7 +112,7 @@ public class PlatformServiceTest {
     }
 
     @Test
-    public void UpdatePlatformById_(){
+    public void updatePlatformById_whenValidRequest_thenReturnsUpdatedPlatform(){
         when(platformRepository.findById(platformId)).thenReturn(Optional.of(platform));
 
         Mockito.lenient().doNothing().when(platformMapper).updatePlatformFromDto(any(PlatformRequestDto.class), any(Platform.class));

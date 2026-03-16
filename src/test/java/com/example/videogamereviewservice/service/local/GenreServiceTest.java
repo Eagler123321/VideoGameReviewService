@@ -1,11 +1,10 @@
-package com.example.videogamereviewservice.service;
+package com.example.videogamereviewservice.service.local;
 
 import com.example.videogamereviewservice.dto.request.GenreRequestDto;
 import com.example.videogamereviewservice.dto.response.GenreResponseDto;
 import com.example.videogamereviewservice.entity.Genre;
 import com.example.videogamereviewservice.mapper.GenreMapper;
 import com.example.videogamereviewservice.repository.GenreRepository;
-import com.example.videogamereviewservice.service.local.GenreServiceLocal;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -59,7 +58,7 @@ public class GenreServiceTest {
     }
 
     @Test
-    public void CreateGenreById_(){
+    public void createGenre_whenValidRequest_thenReturnsSavedGenre(){
         when(genreMapper.toEntity(genreRequestDto)).thenReturn(genre);
         when(genreRepository.save(any(Genre.class))).thenReturn(genre);
         when(genreMapper.toDto(genre)).thenReturn(genreResponseDto);
@@ -71,7 +70,7 @@ public class GenreServiceTest {
     }
 
     @Test
-    public void GetGenreById_(){
+    public void getGenreById_whenExists_thenReturnsGenre(){
         when(genreRepository.findById(genreId)).thenReturn(Optional.of(genre));
         when(genreMapper.toDto(any(Genre.class))).thenReturn(genreResponseDto);
 
@@ -82,7 +81,7 @@ public class GenreServiceTest {
     }
 
     @Test
-    public void GetGenres_(){
+    public void getGenres_whenListNotEmpty_thenReturnsGenres(){
         List<Genre> genres = List.of(genre, genre2);
 
         when(genreRepository.findAll()).thenReturn(genres);
@@ -103,7 +102,7 @@ public class GenreServiceTest {
     }
 
     @Test
-    public void DeleteGenreById_(){
+    public void deleteGenreById_whenExists_thenReturnsDoesNotThrow(){
         when(genreRepository.findById(genreId)).thenReturn(Optional.of(genre));
 
         genreServiceLocal.deleteGenreById(genreId);
@@ -112,7 +111,7 @@ public class GenreServiceTest {
     }
 
     @Test
-    public void UpdateGenreById_(){
+    public void updateGenreById_whenValidRequest_thenReturnsUpdatedGenre(){
         when(genreRepository.findById(genreId)).thenReturn(Optional.of(genre));
 
         Mockito.lenient().doNothing().when(genreMapper).updateGenreFromDto(any(GenreRequestDto.class), any(Genre.class));

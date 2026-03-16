@@ -95,7 +95,7 @@ public class TagControllerTest {
 
     }
 
-    @Test // Проверка исключения и статуса
+    @Test // Проверка исключения и статуса (декоративный)
     public void getTagById_whenNotFound_thenReturnsNotFound() throws Exception{
         when(tagServiceLocal.getTagById(tagId))
                 .thenThrow(new NotFoundException("Tag not found!"));
@@ -139,7 +139,7 @@ public class TagControllerTest {
         response.andExpect(status().isNoContent());
     }
 
-    @Test // Проверка исключения и статуса
+    @Test // Проверка исключения и статуса (декоративный)
     public void deleteTagById_whenTagNotFound_thenReturnsNotFound() throws Exception {
         doThrow(new NotFoundException("Tag not found!"))
                 .when(tagServiceLocal).deleteTagById(999L);
@@ -162,7 +162,7 @@ public class TagControllerTest {
                 .andExpect(jsonPath("$.name", CoreMatchers.is(tagRequestDto.getName())));
     }
 
-    @Test // Проверка исключения и статуса
+    @Test // Проверка исключения и статуса (декоративный)
     public void updateTagById_whenTagIdIsNotFound_thenReturnsNotFound() throws Exception{
         given(tagServiceLocal.updateTagById(any(TagRequestDto.class), eq(tagId)))
                 .willThrow(new NotFoundException("Tag not found!"));
