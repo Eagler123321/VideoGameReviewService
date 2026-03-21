@@ -3,15 +3,18 @@ package com.example.videogamereviewservice.service.local;
 import com.example.videogamereviewservice.dto.request.ReviewRequestDto;
 import com.example.videogamereviewservice.dto.request.VoteRequestDto;
 import com.example.videogamereviewservice.dto.response.ReviewResponseDto;
+import com.example.videogamereviewservice.dto.response.UserResponseDto;
 import com.example.videogamereviewservice.dto.response.VoteResponseDto;
 import com.example.videogamereviewservice.entity.Game;
 import com.example.videogamereviewservice.entity.Review;
 import com.example.videogamereviewservice.entity.User;
 import com.example.videogamereviewservice.entity.Vote;
+import com.example.videogamereviewservice.error.NotFoundException;
 import com.example.videogamereviewservice.mapper.VoteMapper;
 import com.example.videogamereviewservice.repository.ReviewRepository;
 import com.example.videogamereviewservice.repository.UserRepository;
 import com.example.videogamereviewservice.repository.VoteRepository;
+import org.assertj.core.api.AssertionsForClassTypes;
 import org.assertj.core.api.AssertionsForInterfaceTypes;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,6 +29,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -61,7 +65,7 @@ public class VoteServiceTest {
     private VoteResponseDto voteResponseDto2;
 
 
-    @BeforeEach
+    @BeforeEach // ИТОГО 9 тестов
     public void init(){
         voteRequestDto = VoteRequestDto.builder()
                 .voteType(voteType)
@@ -140,6 +144,15 @@ public class VoteServiceTest {
     }
 
     @Test
+    public void getVoteById_whenNotFound_thenThrowNotFoundException(){
+        when(voteRepository.findById(999L)).thenReturn(Optional.empty());
+
+        NotFoundException ex = assertThrows(NotFoundException.class,  () -> voteServiceLocal.getVoteById(999L));
+
+        AssertionsForClassTypes.assertThat(ex.getMessage()).contains("999");
+    }
+
+    @Test
     public void getVotes_whenListNotEmpty_thenReturnsVotes(){
         List<Vote> votes = List.of(vote, vote2);
 
@@ -161,7 +174,25 @@ public class VoteServiceTest {
     }
 
     @Test
+    public void getVotes_whenListIsEmpty_thenReturnsEmptyList(){
+        when(voteRepository.findAll()).thenReturn(List.of());
+
+        List<VoteResponseDto> result = voteServiceLocal.getVotes();
+
+        AssertionsForInterfaceTypes.assertThat(result).isEmpty();
+    }
+
+    @Test
     public void deleteVoteById_whenExists_thenReturnsDoesNotThrow(){
+        when(voteRepository.findById(voteId)).thenReturn(Optional.of(vote));
+
+        voteServiceLocal.deleteVoteById(voteId);
+
+        verify(voteRepository).deleteById(voteId);
+    }
+
+    @Test
+    public void deleteVoteById_whenNotFound_thenReturnsDoesNotThrow(){
         when(voteRepository.findById(voteId)).thenReturn(Optional.of(vote));
 
         voteServiceLocal.deleteVoteById(voteId);
@@ -184,5 +215,14 @@ public class VoteServiceTest {
 
         verify(voteMapper).updateVoteFromDto(any(VoteRequestDto.class), any(Vote.class));
         verify(voteMapper).toDto(any(Vote.class));
+    }
+
+    @Test
+    public void updateVoteById_whenNotFound_thenThrowNotFoundException(){
+        when(voteRepository.findById(999L)).thenReturn(Optional.empty());
+
+        NotFoundException ex = assertThrows(NotFoundException.class,  () -> voteServiceLocal.updateVoteById(voteRequestDto, 999L));
+
+        assertThat(ex.getMessage()).contains("999");
     }
 }

@@ -1,10 +1,14 @@
 package com.example.videogamereviewservice.service.local;
 
 import com.example.videogamereviewservice.dto.request.GenreRequestDto;
+import com.example.videogamereviewservice.dto.response.GameResponseDto;
 import com.example.videogamereviewservice.dto.response.GenreResponseDto;
 import com.example.videogamereviewservice.entity.Genre;
+import com.example.videogamereviewservice.error.NotFoundException;
 import com.example.videogamereviewservice.mapper.GenreMapper;
 import com.example.videogamereviewservice.repository.GenreRepository;
+import org.assertj.core.api.AssertionsForClassTypes;
+import org.assertj.core.api.AssertionsForInterfaceTypes;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,6 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -45,7 +50,7 @@ public class GenreServiceTest {
     private final String name = "cat";
     private final String name2 = "dog";
 
-    @BeforeEach // ИТОГО 5 тестов
+    @BeforeEach // ИТОГО 9 тестов
     public void init(){
         genreResponseDto = GenreResponseDto.builder().id(genreId).name(name).build();
         genreResponseDto2 = GenreResponseDto.builder().id(genreId2).name(name2).build();
@@ -81,6 +86,15 @@ public class GenreServiceTest {
     }
 
     @Test
+    public void getGenreById_whenNotFound_thenThrowNotFoundException(){
+        when(genreRepository.findById(999L)).thenReturn(Optional.empty());
+
+        NotFoundException ex = assertThrows(NotFoundException.class,  () -> genreServiceLocal.getGenreById(999L));
+
+        assertThat(ex.getMessage()).contains("999");
+    }
+
+    @Test
     public void getGenres_whenListNotEmpty_thenReturnsGenres(){
         List<Genre> genres = List.of(genre, genre2);
 
@@ -102,7 +116,25 @@ public class GenreServiceTest {
     }
 
     @Test
+    public void getGenres_whenListIsEmpty_thenReturnsEmptyList(){
+        when(genreRepository.findAll()).thenReturn(List.of());
+
+        List<GenreResponseDto> result = genreServiceLocal.getGenres();
+
+        AssertionsForInterfaceTypes.assertThat(result).isEmpty();
+    }
+
+    @Test
     public void deleteGenreById_whenExists_thenReturnsDoesNotThrow(){
+        when(genreRepository.findById(genreId)).thenReturn(Optional.of(genre));
+
+        genreServiceLocal.deleteGenreById(genreId);
+
+        verify(genreRepository).deleteById(genreId);
+    }
+
+    @Test
+    public void deleteGenreById_whenNotFound_thenReturnsDoesNotThrow(){
         when(genreRepository.findById(genreId)).thenReturn(Optional.of(genre));
 
         genreServiceLocal.deleteGenreById(genreId);
@@ -126,4 +158,15 @@ public class GenreServiceTest {
         verify(genreMapper).updateGenreFromDto(any(GenreRequestDto.class), any(Genre.class));
         verify(genreMapper).toDto(any(Genre.class));
     }
+
+    @Test
+    public void updateGenreById_whenNotFound_thenThrowNotFoundException(){
+        when(genreRepository.findById(999L)).thenReturn(Optional.empty());
+
+        NotFoundException ex = assertThrows(NotFoundException.class,  () -> genreServiceLocal.updateGenreById(genreRequestDto, 999L));
+
+        assertThat(ex.getMessage()).contains("999");
+    }
+
+    
 }

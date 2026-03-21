@@ -1,10 +1,14 @@
 package com.example.videogamereviewservice.service.local;
 
 import com.example.videogamereviewservice.dto.request.TagRequestDto;
+import com.example.videogamereviewservice.dto.response.ReviewResponseDto;
 import com.example.videogamereviewservice.dto.response.TagResponseDto;
 import com.example.videogamereviewservice.entity.Tag;
+import com.example.videogamereviewservice.error.NotFoundException;
 import com.example.videogamereviewservice.mapper.TagMapper;
 import com.example.videogamereviewservice.repository.TagRepository;
+import org.assertj.core.api.AssertionsForClassTypes;
+import org.assertj.core.api.AssertionsForInterfaceTypes;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,6 +21,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -45,7 +50,7 @@ public class TagServiceTest {
     private final String name = "cat";
     private final String name2 = "dog";
 
-    @BeforeEach // ИТОГО 5 тестов
+    @BeforeEach // ИТОГО 9 тестов
     public void init(){
         tagResponseDto = TagResponseDto.builder().id(tagId).name(name).build();
         tagResponseDto2 = TagResponseDto.builder().id(tagId2).name(name2).build();
@@ -81,6 +86,15 @@ public class TagServiceTest {
     }
 
     @Test
+    public void getTagById_whenNotFound_thenThrowNotFoundException(){
+        when(tagRepository.findById(999L)).thenReturn(Optional.empty());
+
+        NotFoundException ex = assertThrows(NotFoundException.class,  () -> tagServiceLocal.getTagById(999L));
+
+        AssertionsForClassTypes.assertThat(ex.getMessage()).contains("999");
+    }
+
+    @Test
     public void getTags_whenListNotEmpty_thenReturnsTags(){
         List<Tag> tags = List.of(tag, tag2);
 
@@ -102,9 +116,27 @@ public class TagServiceTest {
     }
 
     @Test
+    public void getTags_whenListIsEmpty_thenReturnsEmptyList(){
+        when(tagRepository.findAll()).thenReturn(List.of());
+
+        List<TagResponseDto> result = tagServiceLocal.getTags();
+
+        AssertionsForInterfaceTypes.assertThat(result).isEmpty();
+    }
+
+    @Test
     public void deleteTagById_whenExists_thenReturnsDoesNotThrow(){
         when(tagRepository.findById(tagId)).thenReturn(Optional.of(tag));
         
+        tagServiceLocal.deleteTagById(tagId);
+
+        verify(tagRepository).deleteById(tagId);
+    }
+
+    @Test
+    public void deleteTagById_whenNotFound_thenReturnsDoesNotThrow(){
+        when(tagRepository.findById(tagId)).thenReturn(Optional.of(tag));
+
         tagServiceLocal.deleteTagById(tagId);
 
         verify(tagRepository).deleteById(tagId);
@@ -125,5 +157,14 @@ public class TagServiceTest {
 
         verify(tagMapper).updateTagFromDto(any(TagRequestDto.class), any(Tag.class));
         verify(tagMapper).toDto(any(Tag.class));
+    }
+
+    @Test
+    public void updateTagById_whenNotFound_thenThrowNotFoundException(){
+        when(tagRepository.findById(999L)).thenReturn(Optional.empty());
+
+        NotFoundException ex = assertThrows(NotFoundException.class,  () -> tagServiceLocal.updateTagById(tagRequestDto, 999L));
+
+        assertThat(ex.getMessage()).contains("999");
     }
 }
