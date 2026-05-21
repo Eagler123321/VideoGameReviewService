@@ -1,7 +1,7 @@
 package com.example.videogamereviewservice.integration.service.local;
 
 import com.example.videogamereviewservice.annotations.IT;
-import com.example.videogamereviewservice.dto.request.GameRequestDto;
+import com.example.videogamereviewservice.dto.request.base.GameRequestDto;
 import com.example.videogamereviewservice.dto.response.GameResponseDto;
 import com.example.videogamereviewservice.error.NotFoundException;
 import com.example.videogamereviewservice.service.local.GameServiceLocal;
@@ -49,8 +49,37 @@ class GameServiceLocalIT {
     }
 
     @Test
-    void getGameById_whenNotFound_thenThrowsException() {
+    void updateGame_whenValidData_thenReturnsUpdatedGame() {
+/*        GameRequestDto requestDto = createGameRequestDto("Undertale");
+
+        GameResponseDto savedGame = gameServiceLocal.updateGameById(requestDto, );
+
+        assertThat(savedGame).isNotNull();
+        assertThat(savedGame.getId()).isNotNull();
+        assertThat(savedGame.getTitle()).isEqualTo("Undertale");
+        assertThat(savedGame.getDeveloper()).isEqualTo("Toby Fox");*/
+    }
+
+    @Test
+    void updateGame_whenGameIdNotFound_thenThrowsException(){
         assertThatThrownBy(() -> gameServiceLocal.getGameById(999L))
                 .isInstanceOf(NotFoundException.class);
+    }
+
+    @Test
+    void getGameById_whenGameIdNotFound_thenThrowsException() {
+        assertThatThrownBy(() -> gameServiceLocal.getGameById(999L))
+                .isInstanceOf(NotFoundException.class);
+    }
+
+    @Test
+    void deleteGameById_whenGameIdNotFound_thenThrowsException() {
+        assertThatThrownBy(() -> gameServiceLocal.deleteGameById(999L))
+                .isInstanceOf(NotFoundException.class);
+    }
+
+    @Test
+    void deleteGameById_whenExists_thenThrowsException() {
+        assertThatThrownBy(() -> gameServiceLocal.deleteGameById(999L));
     }
 }

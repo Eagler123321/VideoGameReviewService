@@ -1,18 +1,13 @@
 package com.example.videogamereviewservice.integration.service.local;
 
 import com.example.videogamereviewservice.annotations.IT;
-import com.example.videogamereviewservice.dto.request.GameRequestDto;
-import com.example.videogamereviewservice.dto.request.GenreRequestDto;
-import com.example.videogamereviewservice.dto.response.GameResponseDto;
+import com.example.videogamereviewservice.dto.request.base.GenreRequestDto;
 import com.example.videogamereviewservice.dto.response.GenreResponseDto;
 import com.example.videogamereviewservice.error.NotFoundException;
 import com.example.videogamereviewservice.service.local.GenreServiceLocal;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDateTime;
-import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;

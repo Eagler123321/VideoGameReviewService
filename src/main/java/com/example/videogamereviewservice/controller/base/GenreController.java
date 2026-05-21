@@ -1,11 +1,8 @@
-package com.example.videogamereviewservice.controller;
+package com.example.videogamereviewservice.controller.base;
 
-import com.example.videogamereviewservice.dto.request.GenreRequestDto;
-import com.example.videogamereviewservice.dto.request.TagRequestDto;
+import com.example.videogamereviewservice.dto.request.base.GenreRequestDto;
 import com.example.videogamereviewservice.dto.response.GenreResponseDto;
-import com.example.videogamereviewservice.dto.response.TagResponseDto;
 import com.example.videogamereviewservice.service.local.GenreServiceLocal;
-import com.example.videogamereviewservice.service.local.TagServiceLocal;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -1,6 +1,6 @@
 package com.example.videogamereviewservice.mapper;
 
-import com.example.videogamereviewservice.dto.request.UserRequestDto;
+import com.example.videogamereviewservice.dto.request.base.UserRequestDto;
 import com.example.videogamereviewservice.dto.response.UserResponseDto;
 import com.example.videogamereviewservice.entity.User;
 import org.mapstruct.Mapper;

@@ -1,7 +1,6 @@
 package com.example.videogamereviewservice.service.local;
 
-import com.example.videogamereviewservice.dto.request.PlatformRequestDto;
-import com.example.videogamereviewservice.dto.response.GenreResponseDto;
+import com.example.videogamereviewservice.dto.request.base.PlatformRequestDto;
 import com.example.videogamereviewservice.dto.response.PlatformResponseDto;
 import com.example.videogamereviewservice.entity.Platform;
 import com.example.videogamereviewservice.error.NotFoundException;

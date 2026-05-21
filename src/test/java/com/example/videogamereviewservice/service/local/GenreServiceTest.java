@@ -1,13 +1,11 @@
 package com.example.videogamereviewservice.service.local;
 
-import com.example.videogamereviewservice.dto.request.GenreRequestDto;
-import com.example.videogamereviewservice.dto.response.GameResponseDto;
+import com.example.videogamereviewservice.dto.request.base.GenreRequestDto;
 import com.example.videogamereviewservice.dto.response.GenreResponseDto;
 import com.example.videogamereviewservice.entity.Genre;
 import com.example.videogamereviewservice.error.NotFoundException;
 import com.example.videogamereviewservice.mapper.GenreMapper;
 import com.example.videogamereviewservice.repository.GenreRepository;
-import org.assertj.core.api.AssertionsForClassTypes;
 import org.assertj.core.api.AssertionsForInterfaceTypes;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

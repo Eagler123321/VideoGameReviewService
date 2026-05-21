@@ -1,4 +1,4 @@
-package com.example.videogamereviewservice.dto.request;
+package com.example.videogamereviewservice.dto.request.base;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;

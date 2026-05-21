@@ -1,6 +1,6 @@
 package com.example.videogamereviewservice.service.local;
 
-import com.example.videogamereviewservice.dto.request.TagRequestDto;
+import com.example.videogamereviewservice.dto.request.base.TagRequestDto;
 import com.example.videogamereviewservice.dto.response.TagResponseDto;
 import com.example.videogamereviewservice.entity.Tag;
 import com.example.videogamereviewservice.error.NotFoundException;
@@ -9,7 +9,6 @@ import com.example.videogamereviewservice.repository.TagRepository;
 import com.example.videogamereviewservice.service.noImp.TagService;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

@@ -1,9 +1,7 @@
 package com.example.videogamereviewservice.integration.service.local;
 
 import com.example.videogamereviewservice.annotations.IT;
-import com.example.videogamereviewservice.dto.request.PlatformRequestDto;
-import com.example.videogamereviewservice.dto.request.TagRequestDto;
-import com.example.videogamereviewservice.dto.response.PlatformResponseDto;
+import com.example.videogamereviewservice.dto.request.base.TagRequestDto;
 import com.example.videogamereviewservice.dto.response.TagResponseDto;
 import com.example.videogamereviewservice.error.NotFoundException;
 import com.example.videogamereviewservice.service.local.TagServiceLocal;

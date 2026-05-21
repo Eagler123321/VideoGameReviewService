@@ -1,6 +1,6 @@
 package com.example.videogamereviewservice.service.noImp;
 
-import com.example.videogamereviewservice.dto.request.PlatformRequestDto;
+import com.example.videogamereviewservice.dto.request.base.PlatformRequestDto;
 import com.example.videogamereviewservice.dto.response.PlatformResponseDto;
 
 import java.util.List;

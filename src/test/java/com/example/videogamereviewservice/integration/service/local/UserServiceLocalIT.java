@@ -1,9 +1,7 @@
 package com.example.videogamereviewservice.integration.service.local;
 
 import com.example.videogamereviewservice.annotations.IT;
-import com.example.videogamereviewservice.dto.request.TagRequestDto;
-import com.example.videogamereviewservice.dto.request.UserRequestDto;
-import com.example.videogamereviewservice.dto.response.TagResponseDto;
+import com.example.videogamereviewservice.dto.request.base.UserRequestDto;
 import com.example.videogamereviewservice.dto.response.UserResponseDto;
 import com.example.videogamereviewservice.error.NotFoundException;
 import com.example.videogamereviewservice.service.local.UserServiceLocal;
@@ -23,9 +21,8 @@ class UserServiceLocalIT {
     private static UserRequestDto createUserRequestDto(String name) {
         return UserRequestDto.builder()
                 .username("pro228")
-                .password("kias234")
+                .password("Password123")
                 .email("makaron@gmail.com")
-                .role("USER")
                 .description("LET'S GO")
                 .nickname(name)
                 .avatarUrl("CSDFC.jpg")

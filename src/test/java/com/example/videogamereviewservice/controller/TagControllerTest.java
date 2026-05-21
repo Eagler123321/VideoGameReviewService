@@ -1,8 +1,12 @@
 package com.example.videogamereviewservice.controller;
 
-import com.example.videogamereviewservice.dto.request.TagRequestDto;
+import com.example.videogamereviewservice.controller.base.TagController;
+import com.example.videogamereviewservice.dto.request.base.TagRequestDto;
 import com.example.videogamereviewservice.dto.response.TagResponseDto;
 import com.example.videogamereviewservice.error.NotFoundException;
+import com.example.videogamereviewservice.security.CustomUserServiceLocal;
+import com.example.videogamereviewservice.security.jwt.JwtFilter;
+import com.example.videogamereviewservice.security.jwt.JwtServiceLocal;
 import com.example.videogamereviewservice.service.local.TagServiceLocal;
 import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,6 +39,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class TagControllerTest {
     @MockitoBean
     private TagServiceLocal tagServiceLocal;
+    @MockitoBean
+    private JwtFilter jwtFilter;
+    @MockitoBean
+    private JwtServiceLocal jwtServiceLocal;
+    @MockitoBean
+    private CustomUserServiceLocal customUserServiceLocal;
     @Autowired
     private MockMvc mockMvc;
     

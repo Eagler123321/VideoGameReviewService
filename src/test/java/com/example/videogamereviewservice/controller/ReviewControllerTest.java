@@ -1,9 +1,13 @@
 package com.example.videogamereviewservice.controller;
 
-import com.example.videogamereviewservice.dto.request.*;
+import com.example.videogamereviewservice.controller.base.ReviewController;
+import com.example.videogamereviewservice.dto.request.base.ReviewRequestDto;
 import com.example.videogamereviewservice.dto.response.ReviewResponseDto;
 import com.example.videogamereviewservice.error.InvalidIdException;
 import com.example.videogamereviewservice.error.NotFoundException;
+import com.example.videogamereviewservice.security.CustomUserServiceLocal;
+import com.example.videogamereviewservice.security.jwt.JwtFilter;
+import com.example.videogamereviewservice.security.jwt.JwtServiceLocal;
 import com.example.videogamereviewservice.service.local.ReviewServiceLocal;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -38,6 +42,12 @@ public class ReviewControllerTest {
     private MockMvc mockMvc;
     @MockitoBean
     private ReviewServiceLocal reviewServiceLocal;
+    @MockitoBean
+    private JwtFilter jwtFilter;
+    @MockitoBean
+    private JwtServiceLocal jwtServiceLocal;
+    @MockitoBean
+    private CustomUserServiceLocal customUserServiceLocal;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 

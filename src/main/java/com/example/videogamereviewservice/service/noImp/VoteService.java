@@ -1,6 +1,6 @@
 package com.example.videogamereviewservice.service.noImp;
 
-import com.example.videogamereviewservice.dto.request.VoteRequestDto;
+import com.example.videogamereviewservice.dto.request.base.VoteRequestDto;
 import com.example.videogamereviewservice.dto.response.VoteResponseDto;
 
 import java.util.List;

@@ -11,3 +11,17 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
+
+jwt:
+  secret: 1651f76adac5a630e4f30f65b5c6735c8549086fbdf13928071158bc712507ab
+  expiration: 900000
+  refresh-expiration: 604800000
+
+springdoc:
+  swagger-ui:
+    enabled: true
+    display-request-duration: true
+    syntax-highlight:
+      theme: none
+  api-docs:
+    enabled: true

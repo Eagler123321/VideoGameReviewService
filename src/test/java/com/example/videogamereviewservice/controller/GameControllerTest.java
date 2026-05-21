@@ -1,9 +1,13 @@
 package com.example.videogamereviewservice.controller;
 
-import com.example.videogamereviewservice.dto.request.GameRequestDto;
+import com.example.videogamereviewservice.controller.base.GameController;
+import com.example.videogamereviewservice.dto.request.base.GameRequestDto;
 import com.example.videogamereviewservice.dto.response.GameResponseDto;
 import com.example.videogamereviewservice.error.InvalidIdException;
 import com.example.videogamereviewservice.error.NotFoundException;
+import com.example.videogamereviewservice.security.CustomUserServiceLocal;
+import com.example.videogamereviewservice.security.jwt.JwtFilter;
+import com.example.videogamereviewservice.security.jwt.JwtServiceLocal;
 import com.example.videogamereviewservice.service.local.GameServiceLocal;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -39,6 +43,12 @@ public class GameControllerTest {
     private MockMvc mockMvc;
     @MockitoBean
     private GameServiceLocal gameServiceLocal;
+    @MockitoBean
+    private JwtFilter jwtFilter;
+    @MockitoBean
+    private JwtServiceLocal jwtServiceLocal;
+    @MockitoBean
+    private CustomUserServiceLocal customUserServiceLocal;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -55,7 +65,7 @@ public class GameControllerTest {
     private static final List<Long> platformIds = List.of(2L, 3L);
     private static final List<Long> tagIds = List.of(1L, 3L);
 
-    @BeforeEach // ИТОГО 15 тестов
+    @BeforeEach // ИТОГО 15 тестов (44 + 26 + 15) + 35 +  +  = 50 + 50 + 20 = 120
     public void init(){
         gameRequestDto = GameRequestDto.builder()
                 .description(description)

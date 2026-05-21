@@ -1,6 +1,6 @@
 package com.example.videogamereviewservice.mapper;
 
-import com.example.videogamereviewservice.dto.request.GenreRequestDto;
+import com.example.videogamereviewservice.dto.request.base.GenreRequestDto;
 import com.example.videogamereviewservice.dto.response.GenreResponseDto;
 import com.example.videogamereviewservice.entity.Genre;
 import org.mapstruct.Mapper;

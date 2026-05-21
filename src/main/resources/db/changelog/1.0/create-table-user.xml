@@ -6,17 +6,54 @@
 
     <changeSet id="createUser1" author="admin">
         <createTable tableName="users">
+            <!-- первобытный ключ -->
             <column name="id" type="bigint" autoIncrement="true">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
+
+            <!-- косметика -->
             <column name="nickname" type="varchar(50)"/>
-            <column name="username" type="varchar(50)"/>
+
+            <!-- обязанный логин индивида -->
+            <column name="username" type="varchar(50)">
+                <constraints nullable="false" unique="true" uniqueConstraintName="uk_users_username"/>
+            </column>
+
+            <!-- косметика -->
             <column name="description" type="varchar(500)"/>
-            <column name="password" type="varchar"/>
-            <column name="email" type="varchar"/>
-            <column name="avatar_url" type="varchar"/>
-            <column name="role" type="varchar(50)"/>
-            <column name="registered_at" type="timestamp"/>
+
+            <!-- обязанный пароль -->
+            <column name="password" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+
+            <!-- обязанная почта индивида -->
+            <column name="email" type="varchar(255)">
+                <constraints nullable="false" unique="true" uniqueConstraintName="uk_users_email"/>
+            </column>
+
+            <!-- косметика -->
+            <column name="avatar_url" type="varchar(255)"/>
+
+            <!-- все рождаются на свет пользователями -->
+            <column name="role" type="varchar(50)" defaultValue="USER">
+                <constraints nullable="false"/>
+            </column>
+
+            <!-- автоматическая дата рождения -->
+            <column name="registered_at" type="timestamp" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
+
+        <!-- индекс для быстрого поиска по email (всё как по сводке и документации let's go) -->
+        <createIndex indexName="idx_users_email" tableName="users">
+            <column name="email"/>
+        </createIndex>
+
+        <!-- индекс для быстрого поиска по username ;) -->
+        <createIndex indexName="idx_users_username" tableName="users">
+            <column name="username"/>
+        </createIndex>
     </changeSet>
 </databaseChangeLog>

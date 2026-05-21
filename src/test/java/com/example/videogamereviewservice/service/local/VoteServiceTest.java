@@ -1,11 +1,7 @@
 package com.example.videogamereviewservice.service.local;
 
-import com.example.videogamereviewservice.dto.request.ReviewRequestDto;
-import com.example.videogamereviewservice.dto.request.VoteRequestDto;
-import com.example.videogamereviewservice.dto.response.ReviewResponseDto;
-import com.example.videogamereviewservice.dto.response.UserResponseDto;
+import com.example.videogamereviewservice.dto.request.base.VoteRequestDto;
 import com.example.videogamereviewservice.dto.response.VoteResponseDto;
-import com.example.videogamereviewservice.entity.Game;
 import com.example.videogamereviewservice.entity.Review;
 import com.example.videogamereviewservice.entity.User;
 import com.example.videogamereviewservice.entity.Vote;

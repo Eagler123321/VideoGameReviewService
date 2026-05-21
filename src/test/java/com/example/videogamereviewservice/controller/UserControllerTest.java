@@ -1,9 +1,12 @@
 package com.example.videogamereviewservice.controller;
 
-import com.example.videogamereviewservice.dto.request.GenreRequestDto;
-import com.example.videogamereviewservice.dto.request.UserRequestDto;
+import com.example.videogamereviewservice.controller.base.UserController;
+import com.example.videogamereviewservice.dto.request.base.UserRequestDto;
 import com.example.videogamereviewservice.dto.response.UserResponseDto;
 import com.example.videogamereviewservice.error.NotFoundException;
+import com.example.videogamereviewservice.security.CustomUserServiceLocal;
+import com.example.videogamereviewservice.security.jwt.JwtFilter;
+import com.example.videogamereviewservice.security.jwt.JwtServiceLocal;
 import com.example.videogamereviewservice.service.local.UserServiceLocal;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -39,6 +42,12 @@ public class UserControllerTest {
     private MockMvc mockMvc;
     @MockitoBean
     private UserServiceLocal userServiceLocal;
+    @MockitoBean
+    private JwtFilter jwtFilter;
+    @MockitoBean
+    private JwtServiceLocal jwtServiceLocal;
+    @MockitoBean
+    private CustomUserServiceLocal customUserServiceLocal;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -48,7 +57,7 @@ public class UserControllerTest {
     private final Long userId = 1L;
     private final String nickname = "Eagler";
     private final String username = "Eagler228";
-    private final String password = "228339666";
+    private final String password = "Password123";
     private final String email = "kira228@gmail.com";
     private final String role = "reviewer";
     private final String description = "Nice Trick Shot, bruuuh...";
@@ -74,7 +83,6 @@ public class UserControllerTest {
                 .description(description)
                 .avatarUrl(avatarUrl)
                 .email(email)
-                .role(role)
                 .build();
     }
 
@@ -108,7 +116,6 @@ public class UserControllerTest {
                 "username":"koral22817",
                 "email":"daniila@example.com",
                 "avatarUrl":"https://example.com/avatar.png",
-                "role":"USER",
                 "description":"This is a sample user description."
             }
             """;
@@ -215,12 +222,11 @@ public class UserControllerTest {
 
         String validJson = """
             {
-                "password":"123123",
+                "password":"Was12345",
                 "nickname":"Eagler",
                 "username":"koral22817",
                 "email":"daniila@example.com",
                 "avatarUrl":"https://example.com/avatar.png",
-                "role":"USER",
                 "description":"This is a sample user description."
             }
             """;

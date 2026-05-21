@@ -12,7 +12,7 @@ public class ValidationChecker {
         }
 
         repository.findById(id)
-                .orElseThrow(() -> new InvalidIdException("Some %s id does no exist".formatted(type)));
+                .orElseThrow(() -> new InvalidIdException("Some %s id does not exist".formatted(type)));
     }
 
     public static <T> void checkInvalidIds(JpaRepository<T, Long> repository, List<Long> ids, String type) {

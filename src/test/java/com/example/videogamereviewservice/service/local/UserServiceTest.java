@@ -1,10 +1,12 @@
 package com.example.videogamereviewservice.service.local;
 
-import com.example.videogamereviewservice.dto.request.UserRequestDto;
+import com.example.videogamereviewservice.dto.request.base.UserRequestDto;
 import com.example.videogamereviewservice.dto.response.UserResponseDto;
 import com.example.videogamereviewservice.entity.User;
+import com.example.videogamereviewservice.error.NotFoundException;
 import com.example.videogamereviewservice.mapper.UserMapper;
 import com.example.videogamereviewservice.repository.UserRepository;
+import org.assertj.core.api.AssertionsForClassTypes;
 import org.assertj.core.api.AssertionsForInterfaceTypes;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,12 +15,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -29,6 +33,8 @@ public class UserServiceTest {
     private UserMapper userMapper;
     @Mock
     private UserRepository userRepository;
+    @Mock
+    private PasswordEncoder passwordEncoder;
     @InjectMocks
     private UserServiceLocal userServiceLocal;
 
@@ -40,8 +46,8 @@ public class UserServiceTest {
     private final String nickname2 = "Decker";
     private final String username = "krol-makarol1488";
     private final String username2 = "lobada-rola228";
-    private final String password = "jsuuvje123kai";
-    private final String password2 = "asx2ojkaosx124";
+    private final String password = "Password123";
+    private final String password2 = "Password321";
     private final String email = "kirilka321@gmail.com";
     private final String email2 = "kira164@mail.ru";
     private final String avatarUrl = "sacefx.jpg";
@@ -59,7 +65,7 @@ public class UserServiceTest {
     private UserRequestDto userRequestDto;
     private UserRequestDto userRequestDto2;
 
-    @BeforeEach // ИТОГО 5 тестов
+    @BeforeEach // ИТОГО 9 тестов
     public void init(){
         userResponseDto = UserResponseDto.builder()
                 .id(userId)
@@ -83,7 +89,6 @@ public class UserServiceTest {
 
         userRequestDto = UserRequestDto.builder()
                 .nickname(nickname)
-                .role(role)
                 .email(email)
                 .password(password)
                 .username(username)
@@ -93,7 +98,6 @@ public class UserServiceTest {
 
         userRequestDto2 = UserRequestDto.builder()
                 .nickname(nickname2)
-                .role(role2)
                 .email(email2)
                 .password(password2)
                 .username(username2)
@@ -137,6 +141,7 @@ public class UserServiceTest {
 
     @Test
     public void createUser_whenValidRequest_thenReturnsSavedUser(){
+        when(passwordEncoder.encode(userRequestDto.getPassword())).thenReturn("encodedPassword");
         when(userMapper.toEntity(userRequestDto)).thenReturn(user);
         when(userRepository.save(any(User.class))).thenReturn(user);
         when(userMapper.toDto(user)).thenReturn(userResponseDto);
@@ -144,6 +149,8 @@ public class UserServiceTest {
         UserResponseDto savedUser = userServiceLocal.createUser(userRequestDto);
 
         assertionsThat(savedUser);
+
+        verify(passwordEncoder).encode(userRequestDto.getPassword());
     }
     
     @Test
@@ -154,6 +161,15 @@ public class UserServiceTest {
         UserResponseDto savedUser = userServiceLocal.getUserById(userId);
 
         assertionsThat(savedUser);
+    }
+
+    @Test
+    public void getUserById_whenNotFound_thenThrowNotFoundException(){
+        when(userRepository.findById(999L)).thenReturn(Optional.empty());
+
+        NotFoundException ex = assertThrows(NotFoundException.class,  () -> userServiceLocal.getUserById(999L));
+
+        AssertionsForClassTypes.assertThat(ex.getMessage()).contains("999");
     }
 
     @Test
@@ -178,7 +194,25 @@ public class UserServiceTest {
     }
 
     @Test
+    public void getUsers_whenListIsEmpty_thenReturnsEmptyList(){
+        when(userRepository.findAll()).thenReturn(List.of());
+
+        List<UserResponseDto> result = userServiceLocal.getUsers();
+
+        AssertionsForInterfaceTypes.assertThat(result).isEmpty();
+    }
+
+    @Test
     public void deleteUserById_whenExists_thenReturnsDoesNotThrow(){
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+
+        userServiceLocal.deleteUserById(userId);
+
+        verify(userRepository).deleteById(userId);
+    }
+
+    @Test
+    public void deleteUserById_whenNotFound_thenReturnsDoesNotThrow(){
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
 
         userServiceLocal.deleteUserById(userId);
@@ -201,5 +235,14 @@ public class UserServiceTest {
 
         verify(userMapper).updateUserFromDto(any(UserRequestDto.class), any(User.class));
         verify(userMapper).toDto(any(User.class));
+    }
+
+    @Test
+    public void updateUserById_whenNotFound_thenThrowNotFoundException(){
+        when(userRepository.findById(999L)).thenReturn(Optional.empty());
+
+        NotFoundException ex = assertThrows(NotFoundException.class,  () -> userServiceLocal.updateUserById(userRequestDto, 999L));
+
+        assertThat(ex.getMessage()).contains("999");
     }
 }

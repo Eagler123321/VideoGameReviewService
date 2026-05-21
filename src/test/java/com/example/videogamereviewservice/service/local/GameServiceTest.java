@@ -1,9 +1,7 @@
 package com.example.videogamereviewservice.service.local;
 
-import com.example.videogamereviewservice.dto.request.GameRequestDto;
-import com.example.videogamereviewservice.dto.request.ReviewRequestDto;
+import com.example.videogamereviewservice.dto.request.base.GameRequestDto;
 import com.example.videogamereviewservice.dto.response.GameResponseDto;
-import com.example.videogamereviewservice.dto.response.ReviewResponseDto;
 import com.example.videogamereviewservice.entity.*;
 import com.example.videogamereviewservice.error.InvalidIdException;
 import com.example.videogamereviewservice.error.NotFoundException;
@@ -76,7 +74,7 @@ public class GameServiceTest {
     private Game game;
     private Game game2;
 
-    @BeforeEach
+    @BeforeEach // ИТОГО 15 тестов
     public void init(){
         game = Game.builder()
                 .id(gameId)
@@ -311,6 +309,24 @@ public class GameServiceTest {
     public void updateGameById_whenValidRequest_thenReturnsUpdatedGame(){
         when(gameRepository.findById(gameId)).thenReturn(Optional.of(game));
 
+        when(tagRepository.findAllById(tagIds))
+                .thenReturn(List.of(
+                        Tag.builder().id(1L).build(),
+                        Tag.builder().id(2L).build(),
+                        Tag.builder().id(3L).build()
+                ));
+
+        when(genreRepository.findAllById(genreIds))
+                .thenReturn(List.of(Genre.builder().id(15L).build()));
+
+        when(platformRepository.findAllById(platformIds))
+                .thenReturn(List.of(
+                        Platform.builder().id(1L).build(),
+                        Platform.builder().id(2L).build(),
+                        Platform.builder().id(3L).build(),
+                        Platform.builder().id(4L).build()
+                ));
+
         Mockito.lenient().doAnswer(invocation -> {
             Game g = invocation.getArgument(1);
             g.setGenres(new ArrayList<>(genres));
@@ -340,5 +356,84 @@ public class GameServiceTest {
         assertThat(ex.getMessage()).contains("999");
     }
 
-    // Нужно поработать с логикой update, пока что там есть некоторые проблемы с InvalidIdException
+    @Test
+    public void updateGameById_whenTagDoesNotExists_thenThrowInvalidIdException(){
+        when(gameRepository.findById(gameId)).thenReturn(Optional.of(game));
+
+        when(tagRepository.findAllById(tagIds))
+                .thenReturn(List.of(
+                        Tag.builder().id(1L).build(),
+                        Tag.builder().id(2L).build(),
+                        Tag.builder().id(3L).build()
+                ));
+
+        when(genreRepository.findAllById(genreIds))
+                .thenReturn(List.of(Genre.builder().id(15L).build()));
+
+        when(platformRepository.findAllById(platformIds))
+                .thenReturn(List.of(
+                        Platform.builder().id(1L).build(),
+                        Platform.builder().id(2L).build()
+                ));
+
+        InvalidIdException ex = assertThrows(InvalidIdException.class,  () -> gameServiceLocal.updateGameById(gameRequestDto, gameId));
+
+        assertThat(ex.getMessage()).contains("do not exist");
+
+        verify(gameRepository, never()).save(any());
+    }
+
+    @Test
+    public void updateGameById_whenPlatformDoesNotExists_thenThrowInvalidIdException(){
+        when(gameRepository.findById(gameId)).thenReturn(Optional.of(game));
+
+        when(tagRepository.findAllById(tagIds))
+                .thenReturn(List.of(
+                        Tag.builder().id(1L).build(),
+                        Tag.builder().id(2L).build(),
+                        Tag.builder().id(3L).build()
+                ));
+
+        when(genreRepository.findAllById(genreIds))
+                .thenReturn(List.of(Genre.builder().id(15L).build()));
+
+        when(platformRepository.findAllById(platformIds))
+                .thenReturn(List.of(
+                        Platform.builder().id(1L).build(),
+                        Platform.builder().id(2L).build()
+                ));
+
+        InvalidIdException ex = assertThrows(InvalidIdException.class,  () -> gameServiceLocal.updateGameById(gameRequestDto, gameId));
+
+        assertThat(ex.getMessage()).contains("do not exist");
+
+        verify(gameRepository, never()).save(any());
+    }
+
+    @Test
+    public void updateGameById_whenGenreDoesNotExists_thenThrowInvalidIdException(){
+        when(gameRepository.findById(gameId)).thenReturn(Optional.of(game));
+
+        when(tagRepository.findAllById(tagIds))
+                .thenReturn(List.of(
+                        Tag.builder().id(1L).build(),
+                        Tag.builder().id(2L).build(),
+                        Tag.builder().id(3L).build()
+                ));
+
+        when(genreRepository.findAllById(genreIds))
+                .thenReturn(List.of(Genre.builder().id(15L).build()));
+
+        when(platformRepository.findAllById(platformIds))
+                .thenReturn(List.of(
+                        Platform.builder().id(1L).build(),
+                        Platform.builder().id(2L).build()
+                ));
+
+        InvalidIdException ex = assertThrows(InvalidIdException.class,  () -> gameServiceLocal.updateGameById(gameRequestDto, gameId));
+
+        assertThat(ex.getMessage()).contains("do not exist");
+
+        verify(gameRepository, never()).save(any());
+    }
 }

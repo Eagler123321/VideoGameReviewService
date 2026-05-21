@@ -1,6 +1,6 @@
-package com.example.videogamereviewservice.controller;
+package com.example.videogamereviewservice.controller.base;
 
-import com.example.videogamereviewservice.dto.request.TagRequestDto;
+import com.example.videogamereviewservice.dto.request.base.TagRequestDto;
 import com.example.videogamereviewservice.dto.response.TagResponseDto;
 import com.example.videogamereviewservice.service.local.TagServiceLocal;
 import jakarta.validation.Valid;

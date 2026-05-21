@@ -1,4 +1,4 @@
-package com.example.videogamereviewservice.dto.request;
+package com.example.videogamereviewservice.dto.request.base;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
@@ -11,9 +11,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @Builder
-@Schema(description = "Create a new genre")
-public class GenreRequestDto {
+@Schema(description = "Create a new platform")
+public class PlatformRequestDto {
     @NotBlank(message = "Name is required")
-    @Schema(description = "Name of genre", example = "clicker")
+    @Schema(description = "Name of platform", example = "android")
     private String name;
 }

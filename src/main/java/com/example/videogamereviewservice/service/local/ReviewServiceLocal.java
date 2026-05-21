@@ -1,21 +1,19 @@
 package com.example.videogamereviewservice.service.local;
 
-import com.example.videogamereviewservice.dto.request.ReviewRequestDto;
+import com.example.videogamereviewservice.dto.request.base.ReviewRequestDto;
 import com.example.videogamereviewservice.dto.response.ReviewResponseDto;
 import com.example.videogamereviewservice.entity.Game;
 import com.example.videogamereviewservice.entity.Review;
 import com.example.videogamereviewservice.entity.User;
-import com.example.videogamereviewservice.error.InvalidIdException;
 import com.example.videogamereviewservice.error.NotFoundException;
 import com.example.videogamereviewservice.mapper.ReviewMapper;
 import com.example.videogamereviewservice.repository.GameRepository;
 import com.example.videogamereviewservice.repository.ReviewRepository;
 import com.example.videogamereviewservice.repository.UserRepository;
 import com.example.videogamereviewservice.service.noImp.ReviewService;
+import com.example.videogamereviewservice.service.validation.ValidationChecker;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Profile;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -64,6 +62,9 @@ public class ReviewServiceLocal implements ReviewService {
 
         Review review = reviewRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Review not found with id " + id));
+
+        ValidationChecker.checkInvalidId(userRepository, reviewRequestDto.getUserId(), "User");
+        ValidationChecker.checkInvalidId(gameRepository, reviewRequestDto.getGameId(), "Game");
 
         reviewMapper.updateReviewFromDto(reviewRequestDto, review);
 

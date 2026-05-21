@@ -25,7 +25,7 @@ public class UserResponseDto {
     private String email;
     @Schema(description = "Nice image for user (avatar)", example = "https://example.com/avatar.png")
     private String avatarUrl;
-    @Schema(description = "Only YYYY.MM.DD", example = "1985-09-13T12:00:00", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "Only YYYY.MM.DD", example = "1985-09-13T12:00:00", requiredMode = Schema.RequiredMode.AUTO)
     private LocalDateTime registeredAt;
     @Schema(description = "Access rights (or permissions)", example = "USER", requiredMode = Schema.RequiredMode.REQUIRED)
     private String role;

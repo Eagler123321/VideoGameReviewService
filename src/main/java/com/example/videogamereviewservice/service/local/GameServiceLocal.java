@@ -1,12 +1,11 @@
 package com.example.videogamereviewservice.service.local;
 
-import com.example.videogamereviewservice.dto.request.GameRequestDto;
+import com.example.videogamereviewservice.dto.request.base.GameRequestDto;
 import com.example.videogamereviewservice.dto.response.GameResponseDto;
 import com.example.videogamereviewservice.entity.Game;
 import com.example.videogamereviewservice.entity.Genre;
 import com.example.videogamereviewservice.entity.Platform;
 import com.example.videogamereviewservice.entity.Tag;
-import com.example.videogamereviewservice.error.InvalidIdException;
 import com.example.videogamereviewservice.error.NotFoundException;
 import com.example.videogamereviewservice.mapper.GameMapper;
 import com.example.videogamereviewservice.repository.GameRepository;
@@ -14,16 +13,13 @@ import com.example.videogamereviewservice.repository.GenreRepository;
 import com.example.videogamereviewservice.repository.PlatformRepository;
 import com.example.videogamereviewservice.repository.TagRepository;
 import com.example.videogamereviewservice.service.noImp.GameService;
-import org.springframework.context.annotation.Profile;
-import org.springframework.data.jpa.repository.JpaRepository;
+import com.example.videogamereviewservice.service.validation.ValidationChecker;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 import static com.example.videogamereviewservice.service.validation.ValidationChecker.checkInvalidIds;
 
@@ -116,6 +112,10 @@ public class GameServiceLocal implements GameService {
 
         Game game = gameRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Game not found with id " + id));
+
+        ValidationChecker.checkInvalidIds(tagRepository, gameRequestDto.getTagIds(), "Tag");
+        ValidationChecker.checkInvalidIds(genreRepository, gameRequestDto.getGenreIds(), "Genre");
+        ValidationChecker.checkInvalidIds(platformRepository, gameRequestDto.getPlatformIds(), "Platform");
 
         gameMapper.updateGameFromDto(gameRequestDto, toEntityIds(gameRequestDto, game));
 

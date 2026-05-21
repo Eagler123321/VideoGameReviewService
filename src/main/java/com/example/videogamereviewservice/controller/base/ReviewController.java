@@ -1,6 +1,6 @@
-package com.example.videogamereviewservice.controller;
+package com.example.videogamereviewservice.controller.base;
 
-import com.example.videogamereviewservice.dto.request.ReviewRequestDto;
+import com.example.videogamereviewservice.dto.request.base.ReviewRequestDto;
 import com.example.videogamereviewservice.dto.response.ReviewResponseDto;
 import com.example.videogamereviewservice.service.local.ReviewServiceLocal;
 import jakarta.validation.Valid;

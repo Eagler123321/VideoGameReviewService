@@ -1,17 +1,19 @@
-package com.example.videogamereviewservice.controller;
+package com.example.videogamereviewservice.controller.base;
 
-import com.example.videogamereviewservice.dto.request.UserRequestDto;
+import com.example.videogamereviewservice.dto.request.base.UserRequestDto;
 import com.example.videogamereviewservice.dto.response.UserResponseDto;
 import com.example.videogamereviewservice.service.local.UserServiceLocal;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping(path = "/users")
+/*@PreAuthorize("hasRole('ADMIN')")*/
 public class UserController {
     private final UserServiceLocal userServiceLocal;
 

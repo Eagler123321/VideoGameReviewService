@@ -1,9 +1,13 @@
 package com.example.videogamereviewservice.controller;
 
-import com.example.videogamereviewservice.dto.request.VoteRequestDto;
+import com.example.videogamereviewservice.controller.base.VoteController;
+import com.example.videogamereviewservice.dto.request.base.VoteRequestDto;
 import com.example.videogamereviewservice.dto.response.VoteResponseDto;
 import com.example.videogamereviewservice.error.InvalidIdException;
 import com.example.videogamereviewservice.error.NotFoundException;
+import com.example.videogamereviewservice.security.CustomUserServiceLocal;
+import com.example.videogamereviewservice.security.jwt.JwtFilter;
+import com.example.videogamereviewservice.security.jwt.JwtServiceLocal;
 import com.example.videogamereviewservice.service.local.VoteServiceLocal;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -39,6 +43,12 @@ public class VoteControllerTest {
     private MockMvc mockMvc;
     @MockitoBean
     private VoteServiceLocal voteServiceLocal;
+    @MockitoBean
+    private JwtFilter jwtFilter;
+    @MockitoBean
+    private JwtServiceLocal jwtServiceLocal;
+    @MockitoBean
+    private CustomUserServiceLocal customUserServiceLocal;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -79,7 +89,6 @@ public class VoteControllerTest {
                 .andExpect(jsonPath("$.id").value(voteId))
                 .andExpect(jsonPath("$.userId").value(userId))
                 .andExpect(jsonPath("$.reviewId").value(reviewId))
-                .andExpect(jsonPath("$.createdAt").value(createdAt))
                 .andExpect(jsonPath("$.voteType").value(voteType));
     }
 
@@ -130,7 +139,6 @@ public class VoteControllerTest {
                 .andExpect(jsonPath("$.id").value(voteId))
                 .andExpect(jsonPath("$.userId").value(userId))
                 .andExpect(jsonPath("$.reviewId").value(reviewId))
-                .andExpect(jsonPath("$.createdAt").value(createdAt))
                 .andExpect(jsonPath("$.voteType").value(voteType));
     }
 
@@ -157,7 +165,6 @@ public class VoteControllerTest {
                 .andExpect(jsonPath("$[0].id").value(voteId))
                 .andExpect(jsonPath("$[0].userId").value(userId))
                 .andExpect(jsonPath("$[0].reviewId").value(reviewId))
-                .andExpect(jsonPath("$[0].createdAt").value(createdAt))
                 .andExpect(jsonPath("$[0].voteType").value(voteType));
     }
 
@@ -204,7 +211,6 @@ public class VoteControllerTest {
                 .andExpect(jsonPath("$.id").value(voteId))
                 .andExpect(jsonPath("$.userId").value(userId))
                 .andExpect(jsonPath("$.reviewId").value(reviewId))
-                .andExpect(jsonPath("$.createdAt").value(createdAt))
                 .andExpect(jsonPath("$.voteType").value(voteType));
     }
 

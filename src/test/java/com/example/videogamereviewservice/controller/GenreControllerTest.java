@@ -1,9 +1,12 @@
 package com.example.videogamereviewservice.controller;
 
-import com.example.videogamereviewservice.dto.request.GameRequestDto;
-import com.example.videogamereviewservice.dto.request.GenreRequestDto;
+import com.example.videogamereviewservice.controller.base.GenreController;
+import com.example.videogamereviewservice.dto.request.base.GenreRequestDto;
 import com.example.videogamereviewservice.dto.response.GenreResponseDto;
 import com.example.videogamereviewservice.error.NotFoundException;
+import com.example.videogamereviewservice.security.CustomUserServiceLocal;
+import com.example.videogamereviewservice.security.jwt.JwtFilter;
+import com.example.videogamereviewservice.security.jwt.JwtServiceLocal;
 import com.example.videogamereviewservice.service.local.GenreServiceLocal;
 import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.BeforeEach;
@@ -37,6 +40,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class GenreControllerTest {
     @MockitoBean
     private GenreServiceLocal genreServiceLocal;
+    @MockitoBean
+    private JwtFilter jwtFilter;
+    @MockitoBean
+    private JwtServiceLocal jwtServiceLocal;
+    @MockitoBean
+    private CustomUserServiceLocal customUserServiceLocal;
     
     @Autowired
     private MockMvc mockMvc;

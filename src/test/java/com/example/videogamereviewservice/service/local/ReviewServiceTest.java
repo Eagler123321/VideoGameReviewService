@@ -1,10 +1,13 @@
 package com.example.videogamereviewservice.service.local;
 
-import com.example.videogamereviewservice.dto.request.ReviewRequestDto;
+import com.example.videogamereviewservice.dto.request.base.ReviewRequestDto;
 import com.example.videogamereviewservice.dto.response.ReviewResponseDto;
 import com.example.videogamereviewservice.entity.Game;
+import com.example.videogamereviewservice.entity.Genre;
 import com.example.videogamereviewservice.entity.Review;
 import com.example.videogamereviewservice.entity.User;
+import com.example.videogamereviewservice.error.InvalidIdException;
+import com.example.videogamereviewservice.error.NotFoundException;
 import com.example.videogamereviewservice.mapper.ReviewMapper;
 import com.example.videogamereviewservice.repository.GameRepository;
 import com.example.videogamereviewservice.repository.ReviewRepository;
@@ -23,9 +26,9 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class ReviewServiceTest {
@@ -70,7 +73,7 @@ public class ReviewServiceTest {
     private Game game;
     private User user;
 
-    @BeforeEach
+    @BeforeEach // ИТОГО 11 тестов
     public void init(){
         game = Game.builder()
                 .id(gameId)
@@ -198,6 +201,15 @@ public class ReviewServiceTest {
     }
 
     @Test
+    public void getReviewById_whenNotFound_thenThrowNotFoundException(){
+        when(reviewRepository.findById(999L)).thenReturn(Optional.empty());
+
+        NotFoundException ex = assertThrows(NotFoundException.class,  () -> reviewServiceLocal.getReviewById(999L));
+
+        assertThat(ex.getMessage()).contains("999");
+    }
+
+    @Test
     public void getReviews_whenListNotEmpty_thenReturnsReviews(){
         List<Review> reviews = List.of(review, review2);
 
@@ -219,7 +231,25 @@ public class ReviewServiceTest {
     }
 
     @Test
+    public void getReviews_whenListIsEmpty_thenReturnsEmptyList(){
+        when(reviewRepository.findAll()).thenReturn(List.of());
+
+        List<ReviewResponseDto> result = reviewServiceLocal.getReviews();
+
+        AssertionsForInterfaceTypes.assertThat(result).isEmpty();
+    }
+
+    @Test
     public void deleteReviewById_whenExists_thenReturnsDoesNotThrow(){
+        when(reviewRepository.findById(reviewId)).thenReturn(Optional.of(review));
+
+        reviewServiceLocal.deleteReviewById(reviewId);
+
+        verify(reviewRepository).deleteById(reviewId);
+    }
+
+    @Test
+    public void deleteReviewById_whenNotFound_thenReturnsDoesNotThrow(){
         when(reviewRepository.findById(reviewId)).thenReturn(Optional.of(review));
 
         reviewServiceLocal.deleteReviewById(reviewId);
@@ -242,5 +272,45 @@ public class ReviewServiceTest {
 
         verify(reviewMapper).updateReviewFromDto(any(ReviewRequestDto.class), any(Review.class));
         verify(reviewMapper).toDto(any(Review.class));
+    }
+
+    @Test
+    public void updateReviewById_whenNotFound_thenThrowNotFoundException(){
+        when(reviewRepository.findById(999L)).thenReturn(Optional.empty());
+
+        NotFoundException ex = assertThrows(NotFoundException.class,  () -> reviewServiceLocal.updateReviewById(reviewRequestDto, 999L));
+
+        assertThat(ex.getMessage()).contains("999");
+    }
+
+    @Test
+    public void updateReviewById_whenGameDoesNotExists_thenThrowInvalidIdException() {
+        when(reviewRepository.findById(reviewId)).thenReturn(Optional.of(review));
+
+        when(userRepository.findById(userId))
+                .thenReturn(Optional.ofNullable(User.builder()
+                        .id(1L)
+                        .build()));
+
+        when(gameRepository.findById(gameId)).thenReturn(Optional.empty());
+
+        InvalidIdException ex = assertThrows(InvalidIdException.class, () -> reviewServiceLocal.updateReviewById(reviewRequestDto, reviewId));
+
+        assertThat(ex.getMessage()).contains("does not exist");
+
+        verify(reviewRepository, never()).save(any());
+    }
+
+    @Test
+    public void updateReviewById_whenUserDoesNotExists_thenThrowInvalidIdException() {
+        when(reviewRepository.findById(reviewId)).thenReturn(Optional.of(review));
+
+        when(userRepository.findById(userId)).thenReturn(Optional.empty());
+        
+        InvalidIdException ex = assertThrows(InvalidIdException.class, () -> reviewServiceLocal.updateReviewById(reviewRequestDto, reviewId));
+
+        assertThat(ex.getMessage()).contains("does not exist");
+                                                
+        verify(reviewRepository, never()).save(any());
     }
 }
